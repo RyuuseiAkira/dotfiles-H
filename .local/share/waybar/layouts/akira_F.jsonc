@@ -1,0 +1,466 @@
+{
+  "layer": "bottom",
+  "position": "bottom",
+  "margin": "0 100 10 100",
+  "fixed-center": true,
+  "reload_style_on_change": true,
+  "modules-left": [ 
+    "hyprland/workspaces",
+    "group/info"
+  ],
+  
+  "modules-center": [
+    "clock"
+  ],
+
+  "modules-right": [
+    "group/hub",
+    "group/power",
+    "custom/power"
+  ],
+
+  "group/info": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": false
+    },
+    "modules": ["custom/arrow-right","custom/updates","gamemode","custom/spacing2","custom/dunst","custom/spacing3","custom/mediaplayer"]
+  },
+
+  "group/hub": {
+    "orientation": "inherit",
+    "modules": ["group/utils","privacy","pulseaudio"]
+  },
+
+  "group/utils": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": true
+    },
+    "modules": ["custom/arrow-left","tray","custom/spacing2","custom/coolerboost","custom/spacing3","custom/auto-cpufreq","custom/spacing3","idle_inhibitor","custom/spacing3","custom/hyde-menu","custom/spacing2"]
+  },
+
+  // https://man.archlinux.org/man/waybar-gamemode.5.en
+  "gamemode": {
+    "format": " {glyph}",
+    "format-alt": "{glyph} {count}",
+    "glyph": "󰊴",
+    "hide-not-running": true,
+    "use-icon": true,
+    "icon-name": "input-gaming-symbolic",
+    "icon-spacing": 4,
+    "icon-size": 20,
+    "tooltip": true,
+    "tooltip-format": "Games running: {count}"
+  },
+
+  "custom/mediaplayer": {
+    "exec": "hyde-shell mediaplayer.py",
+    "return-type": "json",
+    "format": "{0}",
+    "tooltip": true,
+    "on-click": "playerctl play-pause",
+    "on-click-middle": "playerctl previous",
+    "on-scroll-up": "playerctl position 1-",
+    "on-scroll-down": "playerctl position 1+",
+    "menu": "on-click-right",
+    "menu-file": "${HYDE_WAYBAR_MENU_DIR:-$XDG_DATA_HOME/waybar/menus}/mediaplayer.xml",
+    "menu-actions": {
+      "play-pause": "playerctl play-pause",
+      "next": "playerctl next",
+      "previous": "playerctl previous",
+      "stop": "playerctl stop",
+      "shuffle": "playerctl shuffle toggle",
+      "repeat": "playerctl loop Track",
+      "loop": "playerctl loop Playlist",
+      "disable-loop": "playerctl loop None"
+    },
+    "restart-interval": 5
+  },
+
+  "custom/coolerboost": {
+    "format": "{}",
+    "exec": "$HOME/.config/hyde/themes/akira/scripts/coolerboost-waybar.sh",
+    "return-type": "json",
+    "on-click": "coolerboost toggle >/dev/null; pkill -RTMIN+8 waybar",
+    "signal": 8,
+    "tooltip": true
+  },
+
+  "custom/auto-cpufreq" : {
+      "format": "{}",
+      "return-type": "json",
+      "tooltip": true,
+      "escape" : true,
+      "on-click": "auto-cpufreq-gtk",
+      "exec": "$HOME/.config/hyde/themes/akira/scripts/auto-cpufreq-status.sh",
+      "interval" : 30
+  },
+
+  "custom/updates": {
+    "exec": "hyde-shell system.update",
+    "return-type": "json",
+    "format": "{0}",
+    "rotate": 0,
+    "on-click": "hyde-shell system.update up",
+    "interval": 86400,
+    "tooltip": true,
+    "signal": 20
+  },
+
+  "custom/arrow-right": {
+    "format": "",
+    "tooltip": false
+  },
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "disable-scroll": false,
+    "on-click": "activate",
+    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e-1\"})'",
+    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e+1\"})'",
+    "all-outputs": true,
+    "format-icons": {
+      "urgent": "",
+      "active": "", // ""
+      "default": ""
+    },
+    "persistent-workspaces": {
+      "*": 3
+    }
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}",
+    "rotate": 0,
+    "format-muted": "󰖁",
+    "on-click": "pavucontrol-qt -t 3 || pavucontrol -t 3",
+    "on-click-right": "hyde-shell volumecontrol -s ''",
+    "on-click-middle": "hyde-shell volumecontrol -o m",
+    "on-scroll-up": "hyde-shell volumecontrol -o i",
+    "on-scroll-down": "hyde-shell volumecontrol -o d",
+    "tooltip-format": "{icon} {desc} // {volume}%",
+    "scroll-step": 5,
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", "", ""]
+    }
+  },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰫢",
+      "deactivated": "󰫣"
+    },
+    "tooltip-format": "L_Click: Coffee mode // R_Click: Game mode",
+    "on-click-right": "hyde-shell gamemode",
+    "on-scroll-up": "hyde-shell brightnesscontrol i 1", 
+    "on-scroll-down": "hyde-shell brightnesscontrol d 1"
+  },
+
+  "custom/arrow-left": {
+    "format": "",
+    "tooltip": false
+  },
+
+  "custom/notifications": {
+    "tooltip": false,
+    "format": "{icon} {}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂚",
+      "dnd-notification": "󰂛",
+      "dnd-none": "󰂛",
+      "inhibited-notification": "󰂚",
+      "inhibited-none": "󰂚",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰂛"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+
+  "clock": {
+    "format": "{:%I:%M %p}",
+    "format-alt": "{:%A %d.%m}",
+    "tooltip-format": "<tt><big>{calendar}</big></tt>",
+    "calendar": {
+      "mode": "month",
+      "on-scroll": 1,
+      "format": {
+        "months": "<span color='#ffead3'><b>{}</b></span>",
+        "days": "<span color='#ecc6d9'><b>{}</b></span>",
+        "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
+        "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+        "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+      }
+    },
+    "actions": {
+      "on-click-right": "mode",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
+    }
+  },
+
+  "tray": {
+    "format": "{} ",
+    "icon-size": 15,
+    "spacing": 9
+  },
+
+  "group/power": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": true
+    },
+    "modules": ["battery"]
+  },
+
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "<b>󰂄 {capacity}%</b>",
+    "format-full": "<b>󰁹</b>",
+    "format-icons": [
+      "󰁻",
+      "󰁼",
+      "󰁾",
+      "󰂀",
+      "󰂂",
+      "󰁹"
+    ],
+    "tooltip-format": "{timeTo} | {capacity} % | {power} W"
+  },
+
+  "custom/power": {
+    "format": "{}",
+    "exec": "echo ; echo L-Click for power menu // R-Click for more power options",
+    "on-click": "hyde-shell logoutlaunch 1",
+    "menu": "on-click-right",
+    "menu-file": "${HYDE_WAYBAR_MENU_DIR:-$XDG_DATA_HOME/waybar/menus}/power.xml",
+        "menu-actions": {
+            "lock": "hyde-shell lockscreen.sh",
+            "logout": "hyprctl dispatch 'hl.dsp.exit()'",
+            "shutdown-now": "shutdown now",
+            "shutdown-wait": "systemctl poweroff",
+            "reboot-now": "systemctl reboot",
+            "reboot-firmware": "systemctl reboot --firmware-setup",
+            "suspend": "systemctl suspend",
+            "hibernate": "systemctl hibernate"
+        },
+    "interval" : 86400,
+    "tooltip": true
+  },
+
+  "custom/hyde-menu": {
+    "format": "󰍜 ",
+    "tooltip": true,
+    "tooltip-format": "Right-click for more HyDE options",
+    "menu": "on-click-right",
+    "menu-file": "${HYDE_WAYBAR_MENU_DIR:-$XDG_DATA_HOME/waybar/menus}/hyde-menu.xml",
+    "menu-actions": {
+      "animations-select": "hyde-shell animations --select",
+      "wallpaper-select": "hyde-shell app -t scope -- wallpaper.sh --select --global",
+      "wallpaper-next": "hyde-shell app -t scope -- wallpaper.sh --next --global",
+      "wallpaper-previous": "hyde-shell app -t scope -- wallpaper.sh --previous --global",
+      "wallpaper-random": "hyde-shell app -t scope -- wallpaper.sh --random --global",
+      "theme-next": "hyde-shell app -t scope -- theme.switch.sh -n",
+      "theme-previous": "hyde-shell app -t scope -- theme.switch.sh -p",
+      "theme-select": "hyde-shell app -t scope -- theme.select.sh",
+      "theme-import": "hyde-shell app -T -- hydectl theme import",
+      "layouts-select": "hyde-shell layouts --select;pkill -RTMIN+19 waybar",
+      "waybar-restart": "hyde-shell waybar -ubg",
+      "waybar-reload-css": "sed -i '${/^$/d;}'  $XDG_CONFIG_HOME/waybar/style.css",
+      "waybar-layout-select": "hyde-shell waybar --select-layout",
+      "waybar-style-select": "hyde-shell waybar --select-style",
+      "waybar-layout-next": "hyde-shell waybar --update --next",
+      "waybar-layout-previous": "hyde-shell waybar --update --prev",
+      "lockscreen-select": "hyde-shell lockscreen --select",
+      "workflows-select": "hyde-shell workflows --select;pkill -RTMIN+19 waybar",
+      "hyprsunset-toggle": "hyde-shell hyprsunset -t -P waybar:19",
+      "temp-off": "hyde-shell hyprsunset --cm temp -s identity -P waybar:19 ",
+      "warm-candle": "hyde-shell hyprsunset --cm temp -s 3000 -P waybar:19",
+      "soft-warm": "hyde-shell hyprsunset --cm temp -s 4000 -P waybar:19",
+      "neutral-white": "hyde-shell hyprsunset --cm temp -s 5000 -P waybar:19",
+      "daylight": "hyde-shell hyprsunset --cm temp -s 6500 -P waybar:19",
+      "cool-white": "hyde-shell hyprsunset --cm temp -s 7500 -P waybar:19",
+      "bright-blue": "hyde-shell hyprsunset --cm temp -s 9000 -P waybar:19",
+      "arctic-blue": "hyde-shell hyprsunset --cm temp -s 10000 -P waybar:19",
+      "gamma-100": "hyde-shell hyprsunset --cm gamma -s 100 -P waybar:19",
+      "gamma-90": "hyde-shell hyprsunset --cm gamma -s 90 -P waybar:19",
+      "gamma-80": "hyde-shell hyprsunset --cm gamma -s 80 -P waybar:19",
+      "gamma-70": "hyde-shell hyprsunset --cm gamma -s 70 -P waybar:19",
+      "gamma-60": "hyde-shell hyprsunset --cm gamma -s 60 -P waybar:19",
+      "gamma-50": "hyde-shell hyprsunset --cm gamma -s 50 -P waybar:19",
+      "gamma-40": "hyde-shell hyprsunset --cm gamma -s 40 -P waybar:19",
+      "gamma-30": "hyde-shell hyprsunset --cm gamma -s 30 -P waybar:19",
+      "gamma-20": "hyde-shell hyprsunset --cm gamma -s 20 -P waybar:19",
+      "shaders-select": "hyde-shell shaders --select;pkill -RTMIN+19 waybar",
+      "keybinds-hint": "hyde-shell keybinds_hint",
+      "about-hyde": "xdg-open https://hydeproject.pages.dev"
+    }
+  },
+
+  "custom/spotify": {
+    "exec": "hyde-shell mediaplayer --player spotify",
+    "format": "{}",
+    "rotate": 0,
+    "return-type": "json",
+    "on-click": "playerctl play-pause --player spotify",
+    "on-click-middle": "playerctl stop --player spotify",
+    "on-scroll-up": "hyde-shell volumecontrol -p spotify i",
+    "on-scroll-down": "hyde-shell volumecontrol -p spotify d",
+    "tooltip": true,
+    "menu": "on-click-right",
+    "menu-file": "${HYDE_WAYBAR_MENU_DIR:-$XDG_DATA_HOME/waybar/menus}/spotify.xml",
+    "menu-actions": {
+      "play-pause": "playerctl play-pause --player spotify",
+      "next": "playerctl next --player spotify",
+      "previous": "playerctl previous --player spotify",
+      "stop": "playerctl stop --player spotify",
+      "shuffle": "playerctl shuffle toggle --player spotify",
+      "repeat": "playerctl loop Track --player spotify",
+      "loop": "playerctl loop Playlist --player spotify",
+      "disable-loop": "playerctl loop None --player spotify",
+      // "volume": "hyde-shell volumecontrol -p spotify",
+      "open": "gtk-launch spotify || gtk-launch spotify-launcher"
+    }
+  },
+
+  "custom/dunst": {
+    "format": "{icon} {0}",
+    "rotate": 0,
+    "format-icons": {
+      "notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-notification": "<span foreground='red'><sup></sup></span>",
+      "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-inhibited-none": "",
+      "dnd-none": "",
+      "email-notification": "<span foreground='white'><sup></sup></span>",
+      "chat-notification": "󱋊<span foreground='white'><sup></sup></span>",
+      "warning-notification": "󱨪<span foreground='yellow'><sup></sup></span>",
+      "error-notification": "󱨪<span foreground='red'><sup></sup></span>",
+      "network-notification": "󱂇<span foreground='white'><sup></sup></span>",
+      "battery-notification": "󰁺<span foreground='white'><sup></sup></span>",
+      "update-notification": "󰚰<span foreground='white'><sup></sup></span>",
+      "music-notification": "󰝚<span foreground='white'><sup></sup></span>",
+      "volume-notification": "󰕿<span foreground='white'><sup></sup></span>",
+      "dnd": "",
+      "none": ""
+    },
+    "return-type": "json",
+    // "exec-if": "which dunstctl",
+    "exec-if": "dunstctl  is-paused &> /dev/null", // This is to check if dunst is running
+    "exec": "hyde-shell notifications",
+    "on-scroll-down": "sleep 0.1 && dunstctl history-pop",
+    "on-click": "dunstctl set-paused toggle",
+    "on-click-middle": "dunstctl history-clear",
+    "interval": 1,
+    "tooltip": true,
+    "escape": true,
+    "menu": "on-click-right",
+    "menu-file": "${HYDE_WAYBAR_MENU_DIR:-$XDG_DATA_HOME/waybar/menus}/dunst.xml",
+    "menu-actions": {
+      "show": "dunstctl history-pop",
+      "toggle-dnd": "dunstctl set-paused toggle",
+      "clear": "dunstctl history-clear",
+      "close-all": "dunstctl close-all"
+    }
+  },
+
+  // https://man.archlinux.org/man/extra/waybar/waybar-mpris.5.en
+  // This module do not have any format if there is no player running! Might be an upstream bug
+  // For now use "custom/mediaplayer" module instead
+  "mpris": {
+    "justify": "center",
+    "dynamic-importance-order" : ["title", "artist", "album"],
+    "dynamic-order:" : ["title", "artist", "album"],
+    "format": "{player_icon} {dynamic}",
+    "format-paused": "{status_icon} <i> {dynamic} </i>",
+    "format-stopped": "{status_icon}",
+    "interval": 1,
+    "dynamic-separator": "  ",
+    "player-icons": {
+      "default": "\u25b6",
+      "mpv": "\udb80\udf87",
+      "spotify": "\uf1bc",
+      "vlc": "\udb80\udfe1"
+    },
+    "status-icons": {
+      "paused": "\uf04c",
+      "playing": "\uf04b",
+      "stopped": "\uf04d"
+    },
+    "max-length": 20,
+    "on-click": "playerctl play-pause",
+    "on-click-middle": "playerctl previous",
+    "on-scroll-up": "playerctl position 1-",
+    "on-scroll-down": "playerctl position 1+",
+    "tooltip": true,
+    "tooltip-format": "{title}\nby: {artist}\n{position} / {length}\nPlayer: {player}\n\n󰐎 Click to play/pause\n󰺤 Scroll to seek\n󰙤 Middle click previous\n󰙢 Right click next",  
+    "tooltip-format-stopped": "Player: {player}\n\n󰐎 Click to play/pause\n󰺤 Scroll to seek\n󰙤 Middle click previous\n󰙢 Right click next"
+  },
+
+  "privacy": {
+    "icon-spacing": 5,
+    "icon-size": 10, // Dynamically generated
+    "transition-duration": 250,
+    "modules": [
+      {
+        "type": "screenshare",
+        "tooltip": true
+      },
+      {
+        "type": "audio-in",
+        "tooltip": true
+      }
+    ],
+    "ignore-monitor": true,
+    "ignore": [
+      {
+        "type": "audio-in",
+        "name": "cava"
+      },
+      {
+        "type": "screenshare",
+        "name": "obs"
+      }
+    ]
+  },
+
+  "custom/spacing": {
+    "format": " ",
+    "tooltip": false
+  },
+  "custom/spacing1": {
+    "format": " / ",
+    "tooltip": false
+  },
+  "custom/spacing2": {
+    "format": " // ",
+    "tooltip": false
+  },
+  "custom/spacing3": {
+    "format": " - ",
+    "tooltip": false
+  }
+}
